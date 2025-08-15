@@ -1,22 +1,26 @@
+from ahocorasick import Automaton
+
+def build_automaton(words_set):
+    automaton = Automaton()
+    for word in words_set:
+        automaton.add_word(word, word)
+    automaton.make_automaton()
+    return automaton
+
 def find_relations(words):
-    words = [word.lower() for word in words]
-    words.sort(key=len)
-    relations = []
-    for i, component in enumerate(words):
-        if len(component) <= 2:
+    words = {w.lower() for w in words if len(w) > 2}
+    automaton = build_automaton(words)
+    relations = set()
+    for compound in words:
+        if len(compound) < 6:
             continue
-
-        for compound in words[i+1:]:
-            if len(compound) <= len(component) + 2:
-                continue
-
-            pos = compound.find(component)
-            if pos != -1:
-                relations.append([compound, component, pos])
+        for end_index, component in automaton.iter(compound):
+            if component != compound:
+                relations.add((compound, component))
     return relations
 
 def main():
-    words = [
+    words = {
         "Tag", "Geburtstag","Auto",
         "Autobahn", "Bahn", "Zeit",
         "Zeitung","See", "Hund",
@@ -30,7 +34,7 @@ def main():
         "Haus", "Land", "Feuer",
         "Tagung", "Haustür", "Feuerwehr",
         "Landkreis", "Hand","geburt"
-    ]
+    }
     relations = find_relations(words)
     for relation in relations:
         print(relation)
