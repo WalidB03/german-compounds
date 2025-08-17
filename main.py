@@ -2,21 +2,27 @@ from ahocorasick import Automaton
 
 def build_automaton(words_set):
     automaton = Automaton()
+
     for word in words_set:
         automaton.add_word(word, word)
     automaton.make_automaton()
+
     return automaton
 
 def find_relations(words):
+    relations = set()
+
     words = {w.lower() for w in words if len(w) > 2}
     automaton = build_automaton(words)
-    relations = set()
+
     for compound in words:
         if len(compound) < 6:
             continue
-        for end_index, component in automaton.iter(compound):
+
+        for _, component in automaton.iter(compound):
             if component != compound:
                 relations.add((compound, component))
+
     return relations
 
 def main():
@@ -35,7 +41,9 @@ def main():
         "Tagung", "Haustür", "Feuerwehr",
         "Landkreis", "Hand","geburt"
     }
+
     relations = find_relations(words)
+
     for relation in relations:
         print(relation)
 
