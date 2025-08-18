@@ -1,4 +1,5 @@
 from ahocorasick import Automaton
+import dump_processor
 
 def build_automaton(words_set):
     automaton = Automaton()

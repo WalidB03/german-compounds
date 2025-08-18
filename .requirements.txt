@@ -1,2 +1,29 @@
+annotated-types==0.7.0
+certifi==2025.8.3
+charset-normalizer==3.4.3
+click==8.2.1
+dateparser==1.2.1
+idna==3.10
+joblib==1.5.1
+Levenshtein==0.27.1
+lupa==2.5
 lxml==6.0.0
+mediawiki_langcodes==0.2.16
+nltk==3.9.1
+psutil==7.0.0
 pyahocorasick==2.2.0
+pydantic==2.11.7
+pydantic_core==2.33.2
+python-dateutil==2.9.0.post0
+pytz==2025.2
+RapidFuzz==3.13.0
+regex==2025.7.34
+requests==2.32.4
+six==1.17.0
+tqdm==4.67.1
+typing-inspection==0.4.1
+typing_extensions==4.14.1
+tzlocal==5.3.1
+urllib3==2.5.0
+wikitextprocessor @ git+https://github.com/tatuylonen/wikitextprocessor.git@3c020d22acfb915f840eb0b3a3e3d6eecfcddf77
+wiktextract @ file:$(pwd)/wiktextract
