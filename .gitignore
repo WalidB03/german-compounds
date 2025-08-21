@@ -1,1 +1,3 @@
-dewiktionary-20250801-pages-articles.xml.bz2
+__pycache__/
+resources/de-extract.jsonl.gz
+.venv/

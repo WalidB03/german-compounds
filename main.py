@@ -1,51 +1,47 @@
+from gzip import open as zopen
+from orjson import loads as jloads
 from ahocorasick import Automaton
-import dump_processor
 
-def build_automaton(words_set):
+def find_relations(file_path):
+    words = set()
     automaton = Automaton()
 
-    for word in words_set:
-        automaton.add_word(word, word)
+    with zopen(file_path, "rb") as file:
+
+        for line in file:
+            line = line.strip()
+
+            if not line:
+                continue
+
+            entry = jloads(line)
+            if "word" not in entry:
+                continue
+
+            word = entry["word"].lower()
+            if entry["lang_code"] != "de" or entry["lang"] != "Deutsch" or len(word) < 3 or " " in word:
+                continue
+
+            print(word)
+            words.add(word)
+            automaton.add_word(word, word)
+
     automaton.make_automaton()
-
-    return automaton
-
-def find_relations(words):
-    relations = set()
-
-    words = {w.lower() for w in words if len(w) > 2}
-    automaton = build_automaton(words)
 
     for compound in words:
         if len(compound) < 6:
             continue
 
+        components = set()
         for _, component in automaton.iter(compound):
             if component != compound:
-                relations.add((compound, component))
+                components.add(component)
 
-    return relations
+        if components:
+            yield {"compound": compound, "components": components}
 
 def main():
-    words = {
-        "Tag", "Geburtstag","Auto",
-        "Autobahn", "Bahn", "Zeit",
-        "Zeitung","See", "Hund",
-        "Katze", "Baum", "Blume",
-        "Mutter", "Vater", "Spiel",
-        "Spielzeug", "Zeug", "Schiff",
-        "Schifffahrt", "Fahrt", "Frei",
-        "Freiheit", "Obst", "Obstkuchen",
-        "Kuchen", "Stab", "Buchstabieren",
-        "Wasser", "Wassermelone", "Melone",
-        "Haus", "Land", "Feuer",
-        "Tagung", "Haustür", "Feuerwehr",
-        "Landkreis", "Hand","geburt"
-    }
-
-    relations = find_relations(words)
-
-    for relation in relations:
+    for relation in find_relations("resources/de-extract.jsonl.gz"):
         print(relation)
 
 if __name__ == "__main__":

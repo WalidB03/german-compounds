@@ -1,0 +1,2 @@
+orjson==3.11.2
+pyahocorasick==2.2.0
